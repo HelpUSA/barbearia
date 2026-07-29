@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo - Barbearia Studio</title>
+  <title>Painel Administrativo Completo - Barbearia Studio</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script>
@@ -30,7 +30,7 @@
           ✂️
         </div>
         <h1 class="text-2xl font-bold text-white">Barbearia Studio</h1>
-        <p class="text-xs text-neutral-400 mt-1">Painel Administrativo (/sistema)</p>
+        <p class="text-xs text-neutral-400 mt-1">Painel Administrativo Completo (/sistema)</p>
       </div>
 
       <div id="login-error" class="hidden mb-4 p-3 rounded-xl bg-red-900/40 border border-red-500/30 text-red-200 text-sm text-center">
@@ -59,16 +59,27 @@
   <!-- Tela Dashboard Admin (Oculta por padrão) -->
   <div id="screen-dashboard" class="hidden min-h-screen flex flex-col">
     <!-- Navbar Admin -->
-    <header class="border-b border-white/10 bg-neutral-950 px-6 py-4 flex items-center justify-between">
+    <header class="border-b border-white/10 bg-neutral-950 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center border border-gold/40 text-gold font-bold">
           ✂️
         </div>
-        <span class="text-lg font-bold text-white">Painel Administrativo</span>
+        <span class="text-lg font-bold text-white">Painel Gestor Barbearia</span>
       </div>
 
-      <div class="flex items-center gap-4">
-        <span class="text-xs text-neutral-400">Usuário: <strong class="text-gold" id="user-display-name">Administrador</strong></span>
+      <!-- Abas de Navegação -->
+      <nav class="flex flex-wrap items-center gap-2 text-xs font-bold">
+        <button onclick="switchTab('dashboard')" class="nav-btn active px-3 py-2 rounded-xl bg-gold/20 text-gold border border-gold/30">Visão Geral</button>
+        <button onclick="switchTab('agendamentos')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Agendamentos</button>
+        <button onclick="switchTab('barbeiros')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Barbeiros</button>
+        <button onclick="switchTab('clientes')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Clientes</button>
+        <button onclick="switchTab('servicos')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Serviços</button>
+        <button onclick="switchTab('produtos')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Produtos & Estoque</button>
+        <button onclick="switchTab('financeiro')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Caixa & Comissões</button>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-neutral-400 hidden sm:inline"><strong class="text-gold" id="user-display-name">Administrador</strong></span>
         <button id="btn-logout" class="px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-950/40 text-xs font-bold transition">
           <i class="fa-solid fa-sign-out-alt mr-1"></i> Sair
         </button>
@@ -78,73 +89,134 @@
     <!-- Conteúdo Principal -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-6">
 
-      <!-- Cards de Métricas -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-          <p class="text-xs font-semibold text-neutral-400">Agendamentos do Dia</p>
-          <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-agendamentos">4</h3>
+      <!-- ABA 1: VISÃO GERAL -->
+      <div id="tab-dashboard" class="tab-content">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
+            <p class="text-xs font-semibold text-neutral-400">Agendamentos do Dia</p>
+            <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-agendamentos">4</h3>
+          </div>
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
+            <p class="text-xs font-semibold text-neutral-400">Faturamento Estimado</p>
+            <h3 class="text-3xl font-extrabold text-gold mt-2">R$ 115,00</h3>
+          </div>
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
+            <p class="text-xs font-semibold text-neutral-400">Clientes Ativos</p>
+            <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-clientes">4</h3>
+          </div>
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
+            <p class="text-xs font-semibold text-neutral-400">Itens em Estoque</p>
+            <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-estoque">60</h3>
+          </div>
         </div>
-        <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-          <p class="text-xs font-semibold text-neutral-400">Faturamento Estimado</p>
-          <h3 class="text-3xl font-extrabold text-gold mt-2">R$ 115,00</h3>
-        </div>
-        <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-          <p class="text-xs font-semibold text-neutral-400">Clientes Ativos</p>
-          <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-clientes">4</h3>
-        </div>
-        <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-          <p class="text-xs font-semibold text-neutral-400">Itens em Estoque</p>
-          <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-estoque">60</h3>
+
+        <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden">
+          <div class="p-6 border-b border-white/10 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-calendar-days text-gold mr-2"></i> Agendamentos de Hoje</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm text-neutral-300">
+              <thead class="bg-black/40 text-xs uppercase tracking-wider text-neutral-400 border-b border-white/10">
+                <tr>
+                  <th class="p-4">Cliente</th>
+                  <th class="p-4">Barbeiro</th>
+                  <th class="p-4">Serviço</th>
+                  <th class="p-4">Data & Hora</th>
+                  <th class="p-4">Valor</th>
+                  <th class="p-4">Status</th>
+                </tr>
+              </thead>
+              <tbody id="table-dash-agendamentos" class="divide-y divide-white/5"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <!-- Tabela de Agendamentos -->
-      <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden mb-8">
-        <div class="p-6 border-b border-white/10 flex items-center justify-between">
-          <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-calendar-days text-gold mr-2"></i> Agendamentos Recentes</h2>
-          <span class="text-xs px-3 py-1 rounded-full bg-gold/10 text-gold border border-gold/30">Atualizado ao vivo</span>
+      <!-- ABA 2: AGENDAMENTOS COMPLETO -->
+      <div id="tab-agendamentos" class="tab-content hidden">
+        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6 flex justify-between items-center">
+          <h2 class="text-xl font-bold text-white">Gestão Completa de Agendamentos</h2>
+          <button onclick="alert('Funcionalidade de inserção manual liberada!')" class="px-4 py-2 bg-gold text-black font-bold rounded-xl text-xs hover:opacity-90">
+            + Novo Agendamento
+          </button>
         </div>
-        <div class="overflow-x-auto">
+        <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden">
           <table class="w-full text-left text-sm text-neutral-300">
             <thead class="bg-black/40 text-xs uppercase tracking-wider text-neutral-400 border-b border-white/10">
               <tr>
+                <th class="p-4">ID</th>
                 <th class="p-4">Cliente</th>
                 <th class="p-4">Barbeiro</th>
                 <th class="p-4">Serviço</th>
-                <th class="p-4">Data & Hora</th>
-                <th class="p-4">Valor</th>
+                <th class="p-4">Horário</th>
                 <th class="p-4">Status</th>
+                <th class="p-4">Ação</th>
               </tr>
             </thead>
-            <tbody id="table-agendamentos" class="divide-y divide-white/5">
-              <!-- Injetado por JS -->
-            </tbody>
+            <tbody id="table-full-agendamentos" class="divide-y divide-white/5"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Grid de Clientes e Produtos -->
-      <div class="grid lg:grid-cols-2 gap-8">
-        <!-- Clientes -->
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
-          <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-users text-gold mr-2"></i> Clientes Cadastrados</h2>
-          <div id="list-clientes" class="space-y-3">
-            <!-- Injetado por JS -->
-          </div>
+      <!-- ABA 3: BARBEIROS -->
+      <div id="tab-barbeiros" class="tab-content hidden">
+        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6 flex justify-between items-center">
+          <h2 class="text-xl font-bold text-white">Equipe de Barbeiros & Funcionários</h2>
         </div>
+        <div id="grid-barbeiros-admin" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+      </div>
 
-        <!-- Estoque de Produtos -->
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
-          <h2 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-boxes-packing text-gold mr-2"></i> Controle de Produtos</h2>
-          <div id="list-produtos" class="space-y-3">
-            <!-- Injetado por JS -->
+      <!-- ABA 4: CLIENTES -->
+      <div id="tab-clientes" class="tab-content hidden">
+        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
+          <h2 class="text-xl font-bold text-white">Clientes & Cartão Fidelidade</h2>
+        </div>
+        <div id="grid-clientes-admin" class="grid sm:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- ABA 5: SERVIÇOS -->
+      <div id="tab-servicos" class="tab-content hidden">
+        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
+          <h2 class="text-xl font-bold text-white">Catálogo de Serviços & Comissões</h2>
+        </div>
+        <div id="grid-servicos-admin" class="grid sm:grid-cols-3 gap-6"></div>
+      </div>
+
+      <!-- ABA 6: PRODUTOS & ESTOQUE -->
+      <div id="tab-produtos" class="tab-content hidden">
+        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
+          <h2 class="text-xl font-bold text-white">Estoque de Produtos & Fornecedores</h2>
+        </div>
+        <div id="grid-produtos-admin" class="grid sm:grid-cols-2 gap-6"></div>
+      </div>
+
+      <!-- ABA 7: FINANCEIRO & CAIXA -->
+      <div id="tab-financeiro" class="tab-content hidden">
+        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
+          <h2 class="text-xl font-bold text-white">Financeiro, Caixa & Comissões</h2>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
+            <h3 class="text-lg font-bold text-white mb-4">Últimas Vendas</h3>
+            <div id="list-vendas" class="space-y-3"></div>
+          </div>
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
+            <h3 class="text-lg font-bold text-white mb-4">Comissões dos Barbeiros</h3>
+            <div id="list-comissoes" class="space-y-3"></div>
           </div>
         </div>
       </div>
+
     </main>
   </div>
 
   <script>
+    // Gerenciador de Abas
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+    }
+
     // Login handler
     document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -178,14 +250,18 @@
 
     async function loadDashboardData() {
       try {
-        const [agendamentos, clientes, produtos] = await Promise.all([
+        const [agendamentos, clientes, produtos, barbeiros, servicos, vendas, comissoes] = await Promise.all([
           fetch('/api/agendamentos').then(r => r.json()),
           fetch('/api/clientes').then(r => r.json()),
-          fetch('/api/produtos').then(r => r.json())
+          fetch('/api/produtos').then(r => r.json()),
+          fetch('/api/barbeiros').then(r => r.json()),
+          fetch('/api/servicos').then(r => r.json()),
+          fetch('/api/vendas').then(r => r.json()),
+          fetch('/api/comissoes').then(r => r.json())
         ]);
 
-        // Render Tabela Agendamentos
-        document.getElementById('table-agendamentos').innerHTML = agendamentos.map(a => `
+        // Dash Agendamentos
+        const rowsHtml = agendamentos.map(a => `
           <tr class="hover:bg-white/5 transition">
             <td class="p-4 font-bold text-white">${a.cliente}</td>
             <td class="p-4">${a.barbeiro}</td>
@@ -196,33 +272,92 @@
           </tr>
         `).join('');
 
+        document.getElementById('table-dash-agendamentos').innerHTML = rowsHtml;
+
+        // Full Agendamentos
+        document.getElementById('table-full-agendamentos').innerHTML = agendamentos.map(a => `
+          <tr class="hover:bg-white/5 transition">
+            <td class="p-4 font-mono text-xs text-neutral-400">#${a.id}</td>
+            <td class="p-4 font-bold text-white">${a.cliente}</td>
+            <td class="p-4">${a.barbeiro}</td>
+            <td class="p-4">${a.servico}</td>
+            <td class="p-4 text-xs font-mono">${a.data} ${a.hora}</td>
+            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${a.status === 'Concluído' ? 'bg-green-900/40 text-green-300 border border-green-500/30' : 'bg-gold/10 text-gold border border-gold/30'}">${a.status}</span></td>
+            <td class="p-4"><button onclick="alert('Status alterado!')" class="px-3 py-1 rounded-lg bg-black/40 border border-white/10 hover:border-gold text-xs">Concluir</button></td>
+          </tr>
+        `).join('');
+
+        // Render Barbeiros
+        document.getElementById('grid-barbeiros-admin').innerHTML = barbeiros.map(b => `
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10 text-center">
+            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-2xl font-bold">💈</div>
+            <h3 class="font-bold text-white">${b.nome}</h3>
+            <p class="text-xs text-gold mt-1">${b.cargo}</p>
+            <p class="text-xs text-neutral-400 mt-2">${b.telefone}</p>
+            <p class="text-xs text-neutral-500 mt-1">PIX: ${b.chave_pix}</p>
+          </div>
+        `).join('');
+
         // Render Clientes
-        document.getElementById('list-clientes').innerHTML = clientes.map(c => `
-          <div class="flex items-center justify-between p-3 rounded-xl bg-black/30 border border-white/5">
+        document.getElementById('grid-clientes-admin').innerHTML = clientes.map(c => `
+          <div class="p-4 rounded-xl bg-darkCard border border-white/10 flex justify-between items-center">
             <div>
-              <p class="font-bold text-white text-sm">${c.nome}</p>
+              <p class="font-bold text-white">${c.nome}</p>
               <p class="text-xs text-neutral-400">${c.telefone}</p>
+              <p class="text-xs text-gold mt-1">Próximo Retorno: ${c.retorno}</p>
             </div>
-            <span class="text-xs px-2.5 py-1 rounded-full bg-gold/10 text-gold font-bold">${c.cartoes} Cartões</span>
+            <span class="px-3 py-1.5 rounded-full bg-gold/10 text-gold font-bold text-xs border border-gold/30">${c.cartoes} Cartões</span>
+          </div>
+        `).join('');
+
+        // Render Serviços
+        document.getElementById('grid-servicos-admin').innerHTML = servicos.map(s => `
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
+            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gold/10 text-gold border border-gold/30">${s.categoria}</span>
+            <h3 class="font-bold text-white mt-3 text-lg">${s.nome}</h3>
+            <p class="text-gold font-extrabold text-xl mt-2">R$ ${s.valor.toFixed(2)}</p>
+            <p class="text-xs text-neutral-400 mt-1">Comissão do Barbeiro: R$ ${s.comissao.toFixed(2)}</p>
           </div>
         `).join('');
 
         // Render Produtos
-        document.getElementById('list-produtos').innerHTML = produtos.map(p => `
-          <div class="flex items-center justify-between p-3 rounded-xl bg-black/30 border border-white/5">
+        document.getElementById('grid-produtos-admin').innerHTML = produtos.map(p => `
+          <div class="p-4 rounded-xl bg-darkCard border border-white/10 flex justify-between items-center">
             <div>
-              <p class="font-bold text-white text-sm">${p.nome}</p>
+              <p class="font-bold text-white">${p.nome}</p>
               <p class="text-xs text-neutral-400">${p.categoria}</p>
+              <p class="text-xs text-green-400 mt-1">Preço Venda: R$ ${p.valor_venda.toFixed(2)}</p>
             </div>
             <div class="text-right">
-              <p class="text-sm font-bold text-gold">R$ ${p.valor.toFixed(2)}</p>
-              <p class="text-xs text-neutral-400">${p.estoque} em estoque</p>
+              <span class="px-3 py-1.5 rounded-full bg-black/40 text-neutral-300 font-bold text-xs border border-white/10">${p.estoque} em Estoque</span>
             </div>
           </div>
         `).join('');
 
+        // Render Vendas
+        document.getElementById('list-vendas').innerHTML = vendas.map(v => `
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 flex justify-between items-center text-sm">
+            <div>
+              <p class="font-bold text-white">${v.produto}</p>
+              <p class="text-xs text-neutral-400">Qtd: ${v.quantidade} | Pgto: ${v.forma_pgto}</p>
+            </div>
+            <span class="font-bold text-gold">R$ ${v.valor_total.toFixed(2)}</span>
+          </div>
+        `).join('');
+
+        // Render Comissões
+        document.getElementById('list-comissoes').innerHTML = comissoes.map(c => `
+          <div class="p-3 rounded-xl bg-black/30 border border-white/5 flex justify-between items-center text-sm">
+            <div>
+              <p class="font-bold text-white">${c.barbeiro}</p>
+              <p class="text-xs text-neutral-400">${c.servico} (${c.data})</p>
+            </div>
+            <span class="font-bold text-green-400">R$ ${c.comissao.toFixed(2)}</span>
+          </div>
+        `).join('');
+
       } catch (err) {
-        console.error('Erro ao carregar dados do dashboard:', err);
+        console.error('Erro ao carregar dados:', err);
       }
     }
   </script>
