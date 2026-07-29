@@ -1,223 +1,608 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo Completo - Barbearia Studio</title>
+  <title>Barbearia SaaS - Painel Gestor Inteligente</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           colors: {
             gold: '#EAB308',
-            darkBg: '#0f0f0f',
-            darkCard: '#18181b'
+            goldHover: '#CA8A04',
+            darkBg: '#09090b',
+            darkCard: '#18181b',
+            darkSidebar: '#121215'
           }
         }
       }
     }
   </script>
+  <style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #09090b; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #27272a; border-radius: 9999px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #eab308; }
+  </style>
 </head>
-<body class="bg-darkBg text-neutral-100 font-sans min-h-screen">
+<body class="bg-darkBg text-neutral-100 font-sans min-h-screen custom-scrollbar selection:bg-gold selection:text-black">
 
-  <!-- Tela de Login -->
-  <div id="screen-login" class="flex min-h-screen items-center justify-center p-4">
-    <div class="w-full max-w-md bg-darkCard p-8 rounded-3xl border border-white/10 shadow-2xl">
-      <div class="text-center mb-8">
-        <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gold/20 flex items-center justify-center border border-gold/40 text-gold text-3xl font-bold">
+  <!-- TELA DE LOGIN -->
+  <div id="screen-login" class="flex min-h-screen items-center justify-center p-4 bg-gradient-to-br from-neutral-950 via-darkBg to-neutral-900">
+    <div class="w-full max-w-md bg-darkCard p-8 rounded-3xl border border-white/10 shadow-2xl relative overflow-hidden">
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-gold/10 rounded-full blur-2xl"></div>
+      
+      <div class="text-center mb-8 relative z-10">
+        <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gold/10 flex items-center justify-center border border-gold/30 text-gold text-3xl font-extrabold shadow-lg shadow-gold/10">
           ✂️
         </div>
-        <h1 class="text-2xl font-bold text-white">Barbearia Studio</h1>
-        <p class="text-xs text-neutral-400 mt-1">Painel Administrativo Completo (/sistema)</p>
+        <h1 class="text-2xl font-black text-white tracking-tight">Barbearia SaaS Gestor</h1>
+        <p class="text-xs text-neutral-400 mt-1">Plataforma de Alta Performance & Controle Total</p>
       </div>
 
-      <div id="login-error" class="hidden mb-4 p-3 rounded-xl bg-red-900/40 border border-red-500/30 text-red-200 text-sm text-center">
-        E-mail ou senha inválidos.
+      <div id="login-error" class="hidden mb-4 p-3.5 rounded-xl bg-red-950/60 border border-red-500/30 text-red-300 text-xs text-center font-semibold">
+        ⚠️ E-mail ou senha inválidos. Tente <span class="text-white font-mono">admin@admin</span> / <span class="text-white font-mono">123</span>
       </div>
 
-      <form id="form-login" class="space-y-4">
+      <form id="form-login" class="space-y-4 relative z-10">
         <div>
           <label class="block text-xs font-semibold text-neutral-300 mb-1.5 uppercase tracking-wider">E-mail / Usuário</label>
-          <input type="text" id="login-email" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" value="admin@admin" required>
+          <input type="text" id="login-email" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold transition" value="admin@admin" required>
         </div>
         <div>
           <label class="block text-xs font-semibold text-neutral-300 mb-1.5 uppercase tracking-wider">Senha</label>
-          <input type="password" id="login-password" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" value="123" required>
+          <input type="password" id="login-password" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-3 text-white text-sm outline-none focus:border-gold transition" value="123" required>
         </div>
-        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:opacity-90 transition text-sm">
-          <i class="fa-solid fa-lock mr-2"></i> Entrar no Painel
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm shadow-lg shadow-gold/20 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-to-bracket"></i> Acessar Painel Gestor
         </button>
       </form>
       <div class="mt-6 text-center text-xs text-neutral-500">
-        <p>Login de teste: <span class="text-gold font-mono">admin@admin</span> | Senha: <span class="text-gold font-mono">123</span></p>
+        Login rápido de teste: <span class="text-gold font-mono">admin@admin</span> | <span class="text-gold font-mono">123</span>
       </div>
     </div>
   </div>
 
-  <!-- Tela Dashboard Admin (Oculta por padrão) -->
-  <div id="screen-dashboard" class="hidden min-h-screen flex flex-col">
-    <!-- Navbar Admin -->
-    <header class="border-b border-white/10 bg-neutral-950 px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center border border-gold/40 text-gold font-bold">
-          ✂️
+  <!-- TELA DASHBOARD SAAS (LAYOUT COM SIDEBAR) -->
+  <div id="screen-dashboard" class="hidden min-h-screen flex">
+
+    <!-- SIDEBAR NAVEGAÇÃO -->
+    <aside class="w-64 bg-darkSidebar border-r border-white/10 flex flex-col justify-between hidden md:flex">
+      <div>
+        <div class="p-6 border-b border-white/10 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center border border-gold/30 text-gold text-xl font-bold">
+            ✂️
+          </div>
+          <div>
+            <h2 class="font-extrabold text-white text-sm leading-tight">Barbearia SaaS</h2>
+            <span class="text-[10px] px-2 py-0.5 rounded-full bg-gold/10 text-gold border border-gold/20">Versão Pro 2.0</span>
+          </div>
         </div>
-        <span class="text-lg font-bold text-white">Painel Gestor Barbearia</span>
+
+        <nav class="p-4 space-y-1 text-xs font-bold">
+          <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="sidebar-btn active w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gold bg-gold/10 border border-gold/20 transition">
+            <i class="fa-solid fa-chart-pie text-sm"></i> Visão Geral & KPIs
+          </button>
+          <button onclick="switchTab('agendamentos')" id="btn-tab-agendamentos" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-calendar-check text-sm"></i> Agenda & Horários
+          </button>
+          <button onclick="switchTab('pos')" id="btn-tab-pos" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-cash-register text-sm"></i> Frente de Caixa (POS)
+          </button>
+          <button onclick="switchTab('barbeiros')" id="btn-tab-barbeiros" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-user-scissors text-sm"></i> Barbeiros & Equipe
+          </button>
+          <button onclick="switchTab('clientes')" id="btn-tab-clientes" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-users text-sm"></i> Clientes & WhatsApp CRM
+          </button>
+          <button onclick="switchTab('servicos')" id="btn-tab-servicos" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-list-check text-sm"></i> Catálogo de Serviços
+          </button>
+          <button onclick="switchTab('produtos')" id="btn-tab-produtos" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-boxes-stacked text-sm"></i> Produtos & Estoque
+          </button>
+          <button onclick="switchTab('financeiro')" id="btn-tab-financeiro" class="sidebar-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-neutral-400 hover:text-white hover:bg-white/5 transition">
+            <i class="fa-solid fa-wallet text-sm"></i> Vendas & Comissões
+          </button>
+        </nav>
       </div>
 
-      <!-- Abas de Navegação -->
-      <nav class="flex flex-wrap items-center gap-2 text-xs font-bold">
-        <button onclick="switchTab('dashboard')" class="nav-btn active px-3 py-2 rounded-xl bg-gold/20 text-gold border border-gold/30">Visão Geral</button>
-        <button onclick="switchTab('agendamentos')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Agendamentos</button>
-        <button onclick="switchTab('barbeiros')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Barbeiros</button>
-        <button onclick="switchTab('clientes')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Clientes</button>
-        <button onclick="switchTab('servicos')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Serviços</button>
-        <button onclick="switchTab('produtos')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Produtos & Estoque</button>
-        <button onclick="switchTab('financeiro')" class="nav-btn px-3 py-2 rounded-xl bg-black/40 text-neutral-300 hover:text-gold border border-white/10">Caixa & Comissões</button>
-      </nav>
-
-      <div class="flex items-center gap-3">
-        <span class="text-xs text-neutral-400 hidden sm:inline"><strong class="text-gold" id="user-display-name">Administrador</strong></span>
-        <button id="btn-logout" class="px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-950/40 text-xs font-bold transition">
-          <i class="fa-solid fa-sign-out-alt mr-1"></i> Sair
+      <div class="p-4 border-t border-white/10">
+        <div class="flex items-center gap-3 mb-4 px-2">
+          <div class="w-8 h-8 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-xs font-bold">
+            ADM
+          </div>
+          <div class="overflow-hidden">
+            <p id="user-display-name" class="text-xs font-bold text-white truncate">Administrador</p>
+            <p class="text-[10px] text-neutral-400">Barbearia Studio</p>
+          </div>
+        </div>
+        <button id="btn-logout" class="w-full py-2.5 rounded-xl border border-red-500/30 bg-red-950/20 text-red-400 hover:bg-red-950/50 text-xs font-bold transition flex items-center justify-center gap-2">
+          <i class="fa-solid fa-right-from-bracket"></i> Encerrar Sessão
         </button>
       </div>
-    </header>
+    </aside>
 
-    <!-- Conteúdo Principal -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6">
+    <!-- ÁREA CONTEÚDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col min-w-0">
 
-      <!-- ABA 1: VISÃO GERAL -->
-      <div id="tab-dashboard" class="tab-content">
-        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-            <p class="text-xs font-semibold text-neutral-400">Agendamentos do Dia</p>
-            <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-agendamentos">4</h3>
-          </div>
-          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-            <p class="text-xs font-semibold text-neutral-400">Faturamento Estimado</p>
-            <h3 class="text-3xl font-extrabold text-gold mt-2">R$ 115,00</h3>
-          </div>
-          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-            <p class="text-xs font-semibold text-neutral-400">Clientes Ativos</p>
-            <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-clientes">4</h3>
-          </div>
-          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-            <p class="text-xs font-semibold text-neutral-400">Itens em Estoque</p>
-            <h3 class="text-3xl font-extrabold text-white mt-2" id="stat-estoque">60</h3>
-          </div>
+      <!-- HEADER TOPBAR MOBILE / DESKTOP -->
+      <header class="border-b border-white/10 bg-neutral-950 px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span id="tab-title" class="text-lg font-black text-white">Visão Geral & KPIs</span>
         </div>
 
-        <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden">
-          <div class="p-6 border-b border-white/10 flex items-center justify-between">
-            <h2 class="text-lg font-bold text-white"><i class="fa-solid fa-calendar-days text-gold mr-2"></i> Agendamentos de Hoje</h2>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm text-neutral-300">
-              <thead class="bg-black/40 text-xs uppercase tracking-wider text-neutral-400 border-b border-white/10">
-                <tr>
-                  <th class="p-4">Cliente</th>
-                  <th class="p-4">Barbeiro</th>
-                  <th class="p-4">Serviço</th>
-                  <th class="p-4">Data & Hora</th>
-                  <th class="p-4">Valor</th>
-                  <th class="p-4">Status</th>
-                </tr>
-              </thead>
-              <tbody id="table-dash-agendamentos" class="divide-y divide-white/5"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- ABA 2: AGENDAMENTOS COMPLETO -->
-      <div id="tab-agendamentos" class="tab-content hidden">
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6 flex justify-between items-center">
-          <h2 class="text-xl font-bold text-white">Gestão Completa de Agendamentos</h2>
-          <button onclick="alert('Funcionalidade de inserção manual liberada!')" class="px-4 py-2 bg-gold text-black font-bold rounded-xl text-xs hover:opacity-90">
-            + Novo Agendamento
+        <div class="flex items-center gap-3">
+          <button onclick="openModal('modal-agendamento')" class="px-4 py-2 rounded-xl bg-gold text-black font-extrabold text-xs hover:bg-goldHover transition shadow-lg shadow-gold/20 flex items-center gap-2">
+            <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Novo Agendamento</span>
+          </button>
+          <button onclick="openModal('modal-pos')" class="px-4 py-2 rounded-xl border border-white/20 bg-black/40 text-white font-bold text-xs hover:border-gold hover:text-gold transition flex items-center gap-2">
+            <i class="fa-solid fa-cart-shopping"></i> <span class="hidden sm:inline">Frente de Caixa</span>
           </button>
         </div>
-        <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden">
-          <table class="w-full text-left text-sm text-neutral-300">
-            <thead class="bg-black/40 text-xs uppercase tracking-wider text-neutral-400 border-b border-white/10">
-              <tr>
-                <th class="p-4">ID</th>
-                <th class="p-4">Cliente</th>
-                <th class="p-4">Barbeiro</th>
-                <th class="p-4">Serviço</th>
-                <th class="p-4">Horário</th>
-                <th class="p-4">Status</th>
-                <th class="p-4">Ação</th>
-              </tr>
-            </thead>
-            <tbody id="table-full-agendamentos" class="divide-y divide-white/5"></tbody>
-          </table>
-        </div>
-      </div>
+      </header>
 
-      <!-- ABA 3: BARBEIROS -->
-      <div id="tab-barbeiros" class="tab-content hidden">
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6 flex justify-between items-center">
-          <h2 class="text-xl font-bold text-white">Equipe de Barbeiros & Funcionários</h2>
-        </div>
-        <div id="grid-barbeiros-admin" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-      </div>
+      <!-- CONTEÚDO DAS ABAS -->
+      <main class="flex-1 p-6 overflow-y-auto custom-scrollbar space-y-8">
 
-      <!-- ABA 4: CLIENTES -->
-      <div id="tab-clientes" class="tab-content hidden">
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
-          <h2 class="text-xl font-bold text-white">Clientes & Cartão Fidelidade</h2>
-        </div>
-        <div id="grid-clientes-admin" class="grid sm:grid-cols-2 gap-4"></div>
-      </div>
-
-      <!-- ABA 5: SERVIÇOS -->
-      <div id="tab-servicos" class="tab-content hidden">
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
-          <h2 class="text-xl font-bold text-white">Catálogo de Serviços & Comissões</h2>
-        </div>
-        <div id="grid-servicos-admin" class="grid sm:grid-cols-3 gap-6"></div>
-      </div>
-
-      <!-- ABA 6: PRODUTOS & ESTOQUE -->
-      <div id="tab-produtos" class="tab-content hidden">
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
-          <h2 class="text-xl font-bold text-white">Estoque de Produtos & Fornecedores</h2>
-        </div>
-        <div id="grid-produtos-admin" class="grid sm:grid-cols-2 gap-6"></div>
-      </div>
-
-      <!-- ABA 7: FINANCEIRO & CAIXA -->
-      <div id="tab-financeiro" class="tab-content hidden">
-        <div class="bg-darkCard p-6 rounded-2xl border border-white/10 mb-6">
-          <h2 class="text-xl font-bold text-white">Financeiro, Caixa & Comissões</h2>
-        </div>
-        <div class="grid lg:grid-cols-2 gap-6">
-          <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
-            <h3 class="text-lg font-bold text-white mb-4">Últimas Vendas</h3>
-            <div id="list-vendas" class="space-y-3"></div>
+        <!-- ABA 1: VISÃO GERAL / DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content space-y-8">
+          <!-- KPI Cards -->
+          <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="p-6 rounded-2xl bg-darkCard border border-white/10 relative overflow-hidden">
+              <span class="text-xs font-semibold text-neutral-400">Agendamentos de Hoje</span>
+              <h3 id="dash-stat-agendamentos" class="text-3xl font-extrabold text-white mt-2">0</h3>
+              <div class="mt-2 text-xs text-green-400 font-bold flex items-center gap-1">
+                <i class="fa-solid fa-arrow-trend-up"></i> +12% vs semana passada
+              </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-darkCard border border-white/10 relative overflow-hidden">
+              <span class="text-xs font-semibold text-neutral-400">Faturamento Acumulado</span>
+              <h3 id="dash-stat-faturamento" class="text-3xl font-extrabold text-gold mt-2">R$ 0,00</h3>
+              <div class="mt-2 text-xs text-gold font-bold flex items-center gap-1">
+                <i class="fa-solid fa-coins"></i> Vendas + Atendimentos
+              </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-darkCard border border-white/10 relative overflow-hidden">
+              <span class="text-xs font-semibold text-neutral-400">Base de Clientes</span>
+              <h3 id="dash-stat-clientes" class="text-3xl font-extrabold text-white mt-2">0</h3>
+              <div class="mt-2 text-xs text-neutral-400 flex items-center gap-1">
+                <i class="fa-solid fa-users"></i> Clientes Cadastrados
+              </div>
+            </div>
+            <div class="p-6 rounded-2xl bg-darkCard border border-white/10 relative overflow-hidden">
+              <span class="text-xs font-semibold text-neutral-400">Itens em Estoque</span>
+              <h3 id="dash-stat-estoque" class="text-3xl font-extrabold text-white mt-2">0</h3>
+              <div class="mt-2 text-xs text-yellow-400 font-bold flex items-center gap-1">
+                <i class="fa-solid fa-boxes-stacked"></i> Estoque monitorado
+              </div>
+            </div>
           </div>
-          <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
-            <h3 class="text-lg font-bold text-white mb-4">Comissões dos Barbeiros</h3>
-            <div id="list-comissoes" class="space-y-3"></div>
+
+          <!-- Tabela de Próximos Agendamentos -->
+          <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden">
+            <div class="p-6 border-b border-white/10 flex items-center justify-between">
+              <h3 class="font-bold text-white text-base"><i class="fa-solid fa-clock text-gold mr-2"></i> Próximos Agendamentos na Agenda</h3>
+              <button onclick="switchTab('agendamentos')" class="text-xs text-gold hover:underline font-bold">Ver todos na agenda →</button>
+            </div>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-neutral-300">
+                <thead class="bg-black/40 text-xs uppercase tracking-wider text-neutral-400 border-b border-white/10">
+                  <tr>
+                    <th class="p-4">Cliente</th>
+                    <th class="p-4">Barbeiro</th>
+                    <th class="p-4">Serviço</th>
+                    <th class="p-4">Data & Hora</th>
+                    <th class="p-4">Valor</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Ação</th>
+                  </tr>
+                </thead>
+                <tbody id="table-dash-agendamentos" class="divide-y divide-white/5">
+                  <!-- JS Injetado -->
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
 
-    </main>
+        <!-- ABA 2: AGENDA & HORÁRIOS -->
+        <div id="tab-agendamentos" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 class="text-xl font-bold text-white">Agenda Interativa de Horários</h2>
+              <p class="text-xs text-neutral-400">Gerencie todos os atendimentos, finalize serviços e lance valores automaticamente no caixa.</p>
+            </div>
+            <button onclick="openModal('modal-agendamento')" class="px-4 py-2.5 bg-gold text-black font-extrabold rounded-xl text-xs hover:bg-goldHover transition">
+              + Criar Novo Agendamento
+            </button>
+          </div>
+
+          <div class="bg-darkCard rounded-2xl border border-white/10 overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm text-neutral-300">
+                <thead class="bg-black/40 text-xs uppercase tracking-wider text-neutral-400 border-b border-white/10">
+                  <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Cliente</th>
+                    <th class="p-4">Barbeiro</th>
+                    <th class="p-4">Serviço</th>
+                    <th class="p-4">Data & Hora</th>
+                    <th class="p-4">Valor</th>
+                    <th class="p-4">Status</th>
+                    <th class="p-4">Ações Rápidas</th>
+                  </tr>
+                </thead>
+                <tbody id="table-full-agendamentos" class="divide-y divide-white/5"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 3: FRENTE DE CAIXA (POS) -->
+        <div id="tab-pos" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
+            <h2 class="text-xl font-bold text-white mb-2">Frente de Caixa (Ponto de Venda POS)</h2>
+            <p class="text-xs text-neutral-400">Realize vendas diretas de produtos ou serviços com baixa automática de estoque.</p>
+          </div>
+
+          <div class="grid lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-darkCard p-6 rounded-2xl border border-white/10">
+              <h3 class="font-bold text-white text-base mb-4">Selecionar Produto para Venda</h3>
+              <div id="pos-products-grid" class="grid sm:grid-cols-2 gap-4"></div>
+            </div>
+
+            <div class="bg-darkCard p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+              <div>
+                <h3 class="font-bold text-white text-base mb-4">Resumo da Venda POS</h3>
+                <div class="space-y-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-neutral-300 mb-1">Item Selecionado</label>
+                    <input type="text" id="pos-item-name" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" readonly placeholder="Clique em um produto ao lado">
+                    <input type="hidden" id="pos-product-id">
+                  </div>
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-xs font-semibold text-neutral-300 mb-1">Quantidade</label>
+                      <input type="number" id="pos-qty" min="1" value="1" onchange="updatePosTotal()" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm">
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold text-neutral-300 mb-1">Preço Unitário</label>
+                      <input type="text" id="pos-unit-price" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-gold font-bold text-sm" readonly value="R$ 0,00">
+                    </div>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-neutral-300 mb-1">Forma de Pagamento</label>
+                    <select id="pos-payment" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm outline-none focus:border-gold">
+                      <option value="Pix">Pix Instantâneo</option>
+                      <option value="Cartão de Crédito">Cartão de Crédito</option>
+                      <option value="Cartão de Débito">Cartão de Débito</option>
+                      <option value="Dinheiro">Dinheiro em Espécie</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 border-t border-white/10 pt-4">
+                <div class="flex justify-between items-center mb-4">
+                  <span class="text-sm font-semibold text-neutral-400">Total a Pagar</span>
+                  <span id="pos-total-display" class="text-2xl font-extrabold text-gold">R$ 0,00</span>
+                </div>
+                <button onclick="executePosCheckout()" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-check-circle"></i> Finalizar Venda no Caixa
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ABA 4: BARBEIROS & EQUIPE -->
+        <div id="tab-barbeiros" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10 flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-white">Equipe de Barbeiros</h2>
+              <p class="text-xs text-neutral-400">Gerencie contatos, especialidades e chaves PIX para repasse de comissões.</p>
+            </div>
+            <button onclick="openModal('modal-barbeiro')" class="px-4 py-2.5 bg-gold text-black font-extrabold rounded-xl text-xs hover:bg-goldHover transition">
+              + Cadastrar Barbeiro
+            </button>
+          </div>
+          <div id="grid-barbeiros-admin" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+        </div>
+
+        <!-- ABA 5: CLIENTES & WHATSAPP CRM -->
+        <div id="tab-clientes" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10 flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-white">Clientes & WhatsApp CRM</h2>
+              <p class="text-xs text-neutral-400">Acompanhe cartões fidelidade e envie lembretes diretos no WhatsApp.</p>
+            </div>
+            <button onclick="openModal('modal-cliente')" class="px-4 py-2.5 bg-gold text-black font-extrabold rounded-xl text-xs hover:bg-goldHover transition">
+              + Cadastrar Cliente
+            </button>
+          </div>
+          <div id="grid-clientes-admin" class="grid sm:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- ABA 6: CATÁLOGO DE SERVIÇOS -->
+        <div id="tab-servicos" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10 flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-white">Catálogo de Serviços & Comissões</h2>
+              <p class="text-xs text-neutral-400">Configure os valores dos serviços e o valor da comissão devida ao barbeiro.</p>
+            </div>
+            <button onclick="openModal('modal-servico')" class="px-4 py-2.5 bg-gold text-black font-extrabold rounded-xl text-xs hover:bg-goldHover transition">
+              + Cadastrar Serviço
+            </button>
+          </div>
+          <div id="grid-servicos-admin" class="grid sm:grid-cols-3 gap-6"></div>
+        </div>
+
+        <!-- ABA 7: PRODUTOS & ESTOQUE -->
+        <div id="tab-produtos" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10 flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-white">Controle de Produtos & Estoque</h2>
+              <p class="text-xs text-neutral-400">Acompanhe o estoque disponível, preço de compra e margem de lucro.</p>
+            </div>
+            <button onclick="openModal('modal-produto')" class="px-4 py-2.5 bg-gold text-black font-extrabold rounded-xl text-xs hover:bg-goldHover transition">
+              + Cadastrar Produto
+            </button>
+          </div>
+          <div id="grid-produtos-admin" class="grid sm:grid-cols-2 gap-6"></div>
+        </div>
+
+        <!-- ABA 8: FINANCEIRO, VENDAS & COMISSÕES -->
+        <div id="tab-financeiro" class="tab-content hidden space-y-6">
+          <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
+            <h2 class="text-xl font-bold text-white mb-1">Financeiro, Caixa & Repasse de Comissões</h2>
+            <p class="text-xs text-neutral-400">Veja o histórico de vendas realizadas e faça a liquidação de comissões dos barbeiros.</p>
+          </div>
+
+          <div class="grid lg:grid-cols-2 gap-6">
+            <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
+              <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-file-invoice-dollar text-gold mr-2"></i> Histórico de Vendas no Caixa</h3>
+              <div id="list-vendas" class="space-y-3"></div>
+            </div>
+            <div class="bg-darkCard p-6 rounded-2xl border border-white/10">
+              <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-coins text-gold mr-2"></i> Repasse de Comissões</h3>
+              <div id="list-comissoes" class="space-y-3"></div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
   </div>
 
+  <!-- MODAIS INTERATIVOS SAAS -->
+
+  <!-- Modal 1: Novo Agendamento -->
+  <div id="modal-agendamento" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-darkCard p-6 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-white">Criar Novo Agendamento</h3>
+        <button onclick="closeModal('modal-agendamento')" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-modal-agendamento" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Nome do Cliente</label>
+          <input type="text" id="m-appt-cliente" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="Ex: João Carlos">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Telefone WhatsApp</label>
+          <input type="text" id="m-appt-telefone" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" placeholder="(31) 99999-8888">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Serviço</label>
+            <select id="m-appt-servico" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required></select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Barbeiro</label>
+            <select id="m-appt-barbeiro" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required></select>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Data</label>
+            <input type="date" id="m-appt-data" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Horário</label>
+            <input type="time" id="m-appt-hora" value="14:00" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required>
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm mt-4">
+          Confirmar e Salvar Agendamento
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 2: Novo Barbeiro -->
+  <div id="modal-barbeiro" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-darkCard p-6 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-white">Cadastrar Novo Barbeiro</h3>
+        <button onclick="closeModal('modal-barbeiro')" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-modal-barbeiro" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Nome Completo</label>
+          <input type="text" id="m-barber-nome" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Cargo / Especialidade</label>
+          <input type="text" id="m-barber-cargo" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="Ex: Especialista em Barba">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Telefone</label>
+          <input type="text" id="m-barber-telefone" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="(31) 98888-0000">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Chave PIX</label>
+          <input type="text" id="m-barber-pix" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" placeholder="Ex: CPF ou E-mail PIX">
+        </div>
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm mt-4">
+          Salvar Barbeiro
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Novo Cliente -->
+  <div id="modal-cliente" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-darkCard p-6 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-white">Cadastrar Novo Cliente</h3>
+        <button onclick="closeModal('modal-cliente')" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-modal-cliente" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Nome Completo</label>
+          <input type="text" id="m-client-nome" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Telefone WhatsApp</label>
+          <input type="text" id="m-client-telefone" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="(31) 99999-1111">
+        </div>
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm mt-4">
+          Salvar Cliente
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Novo Serviço -->
+  <div id="modal-servico" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-darkCard p-6 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-white">Cadastrar Novo Serviço</h3>
+        <button onclick="closeModal('modal-servico')" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-modal-servico" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Nome do Serviço</label>
+          <input type="text" id="m-srv-nome" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="Ex: Alisamento Capilar">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Categoria</label>
+            <input type="text" id="m-srv-cat" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="Ex: Química">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Tempo Estimado</label>
+            <input type="text" id="m-srv-tempo" value="30 min" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Valor Venda (R$)</label>
+            <input type="number" step="0.5" id="m-srv-valor" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="35.00">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Comissão Barbeiro (R$)</label>
+            <input type="number" step="0.5" id="m-srv-comissao" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="14.00">
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm mt-4">
+          Salvar Serviço
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 5: Novo Produto -->
+  <div id="modal-produto" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md bg-darkCard p-6 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-white">Cadastrar Novo Produto</h3>
+        <button onclick="closeModal('modal-produto')" class="text-neutral-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <form id="form-modal-produto" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-neutral-300 mb-1">Nome do Produto</label>
+          <input type="text" id="m-prod-nome" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="Ex: Gel Fixador 250g">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Categoria</label>
+            <input type="text" id="m-prod-cat" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="Ex: Pomadas">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Quantidade Estoque</label>
+            <input type="number" id="m-prod-estoque" value="10" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Preço de Custo (R$)</label>
+            <input type="number" step="0.5" id="m-prod-compra" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="12.00">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-300 mb-1">Preço de Venda (R$)</label>
+            <input type="number" step="0.5" id="m-prod-venda" class="w-full bg-black/50 border border-white/15 rounded-xl px-4 py-2.5 text-white text-sm" required placeholder="25.00">
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-3.5 rounded-xl hover:bg-goldHover transition text-sm mt-4">
+          Salvar Produto no Estoque
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT PRINCIPAL SPA DA BARBEARIA -->
   <script>
+    let globalState = {
+      servicos: [],
+      barbeiros: [],
+      clientes: [],
+      agendamentos: [],
+      produtos: [],
+      vendas: [],
+      comissoes: []
+    };
+
     // Gerenciador de Abas
     function switchTab(tabName) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      document.querySelectorAll('.sidebar-btn').forEach(el => {
+        el.classList.remove('active', 'text-gold', 'bg-gold/10', 'border', 'border-gold/20');
+        el.classList.add('text-neutral-400');
+      });
+
+      const targetTab = document.getElementById('tab-' + tabName);
+      const targetBtn = document.getElementById('btn-tab-' + tabName);
+
+      if (targetTab) targetTab.classList.remove('hidden');
+      if (targetBtn) {
+        targetBtn.classList.add('active', 'text-gold', 'bg-gold/10', 'border', 'border-gold/20');
+        targetBtn.classList.remove('text-neutral-400');
+      }
+
+      const titles = {
+        dashboard: 'Visão Geral & KPIs',
+        agendamentos: 'Agenda Interativa de Horários',
+        pos: 'Frente de Caixa (Ponto de Venda POS)',
+        barbeiros: 'Equipe de Barbeiros',
+        clientes: 'Clientes & WhatsApp CRM',
+        servicos: 'Catálogo de Serviços',
+        produtos: 'Controle de Produtos & Estoque',
+        financeiro: 'Vendas & Comissões'
+      };
+      document.getElementById('tab-title').textContent = titles[tabName] || 'Painel Gestor';
     }
 
-    // Login handler
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // LOGIN API
     document.getElementById('form-login').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = document.getElementById('login-email').value;
@@ -230,11 +615,12 @@
           body: JSON.stringify({ email, password })
         });
         const data = await res.json();
+
         if (res.ok && data.success) {
           document.getElementById('screen-login').classList.add('hidden');
           document.getElementById('screen-dashboard').classList.remove('hidden');
           document.getElementById('user-display-name').textContent = data.user.name;
-          loadDashboardData();
+          loadAllData();
         } else {
           document.getElementById('login-error').classList.remove('hidden');
         }
@@ -248,118 +634,339 @@
       document.getElementById('screen-login').classList.remove('hidden');
     });
 
-    async function loadDashboardData() {
+    // LOAD ALL DATA FROM PERSISTENT DATABASE
+    async function loadAllData() {
       try {
-        const [agendamentos, clientes, produtos, barbeiros, servicos, vendas, comissoes] = await Promise.all([
-          fetch('/api/agendamentos').then(r => r.json()),
-          fetch('/api/clientes').then(r => r.json()),
-          fetch('/api/produtos').then(r => r.json()),
-          fetch('/api/barbeiros').then(r => r.json()),
+        const [servicos, barbeiros, clientes, agendamentos, produtos, vendas, comissoes] = await Promise.all([
           fetch('/api/servicos').then(r => r.json()),
+          fetch('/api/barbeiros').then(r => r.json()),
+          fetch('/api/clientes').then(r => r.json()),
+          fetch('/api/agendamentos').then(r => r.json()),
+          fetch('/api/produtos').then(r => r.json()),
           fetch('/api/vendas').then(r => r.json()),
           fetch('/api/comissoes').then(r => r.json())
         ]);
 
-        // Dash Agendamentos
-        const rowsHtml = agendamentos.map(a => `
-          <tr class="hover:bg-white/5 transition">
-            <td class="p-4 font-bold text-white">${a.cliente}</td>
-            <td class="p-4">${a.barbeiro}</td>
-            <td class="p-4">${a.servico}</td>
-            <td class="p-4 text-xs font-mono">${a.data} ${a.hora}</td>
-            <td class="p-4 font-bold text-gold">R$ ${a.valor.toFixed(2)}</td>
-            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${a.status === 'Concluído' ? 'bg-green-900/40 text-green-300 border border-green-500/30' : 'bg-gold/10 text-gold border border-gold/30'}">${a.status}</span></td>
-          </tr>
-        `).join('');
+        globalState = { servicos, barbeiros, clientes, agendamentos, produtos, vendas, comissoes };
 
-        document.getElementById('table-dash-agendamentos').innerHTML = rowsHtml;
-
-        // Full Agendamentos
-        document.getElementById('table-full-agendamentos').innerHTML = agendamentos.map(a => `
-          <tr class="hover:bg-white/5 transition">
-            <td class="p-4 font-mono text-xs text-neutral-400">#${a.id}</td>
-            <td class="p-4 font-bold text-white">${a.cliente}</td>
-            <td class="p-4">${a.barbeiro}</td>
-            <td class="p-4">${a.servico}</td>
-            <td class="p-4 text-xs font-mono">${a.data} ${a.hora}</td>
-            <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${a.status === 'Concluído' ? 'bg-green-900/40 text-green-300 border border-green-500/30' : 'bg-gold/10 text-gold border border-gold/30'}">${a.status}</span></td>
-            <td class="p-4"><button onclick="alert('Status alterado!')" class="px-3 py-1 rounded-lg bg-black/40 border border-white/10 hover:border-gold text-xs">Concluir</button></td>
-          </tr>
-        `).join('');
-
-        // Render Barbeiros
-        document.getElementById('grid-barbeiros-admin').innerHTML = barbeiros.map(b => `
-          <div class="p-6 rounded-2xl bg-darkCard border border-white/10 text-center">
-            <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-2xl font-bold">💈</div>
-            <h3 class="font-bold text-white">${b.nome}</h3>
-            <p class="text-xs text-gold mt-1">${b.cargo}</p>
-            <p class="text-xs text-neutral-400 mt-2">${b.telefone}</p>
-            <p class="text-xs text-neutral-500 mt-1">PIX: ${b.chave_pix}</p>
-          </div>
-        `).join('');
-
-        // Render Clientes
-        document.getElementById('grid-clientes-admin').innerHTML = clientes.map(c => `
-          <div class="p-4 rounded-xl bg-darkCard border border-white/10 flex justify-between items-center">
-            <div>
-              <p class="font-bold text-white">${c.nome}</p>
-              <p class="text-xs text-neutral-400">${c.telefone}</p>
-              <p class="text-xs text-gold mt-1">Próximo Retorno: ${c.retorno}</p>
-            </div>
-            <span class="px-3 py-1.5 rounded-full bg-gold/10 text-gold font-bold text-xs border border-gold/30">${c.cartoes} Cartões</span>
-          </div>
-        `).join('');
-
-        // Render Serviços
-        document.getElementById('grid-servicos-admin').innerHTML = servicos.map(s => `
-          <div class="p-6 rounded-2xl bg-darkCard border border-white/10">
-            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gold/10 text-gold border border-gold/30">${s.categoria}</span>
-            <h3 class="font-bold text-white mt-3 text-lg">${s.nome}</h3>
-            <p class="text-gold font-extrabold text-xl mt-2">R$ ${s.valor.toFixed(2)}</p>
-            <p class="text-xs text-neutral-400 mt-1">Comissão do Barbeiro: R$ ${s.comissao.toFixed(2)}</p>
-          </div>
-        `).join('');
-
-        // Render Produtos
-        document.getElementById('grid-produtos-admin').innerHTML = produtos.map(p => `
-          <div class="p-4 rounded-xl bg-darkCard border border-white/10 flex justify-between items-center">
-            <div>
-              <p class="font-bold text-white">${p.nome}</p>
-              <p class="text-xs text-neutral-400">${p.categoria}</p>
-              <p class="text-xs text-green-400 mt-1">Preço Venda: R$ ${p.valor_venda.toFixed(2)}</p>
-            </div>
-            <div class="text-right">
-              <span class="px-3 py-1.5 rounded-full bg-black/40 text-neutral-300 font-bold text-xs border border-white/10">${p.estoque} em Estoque</span>
-            </div>
-          </div>
-        `).join('');
-
-        // Render Vendas
-        document.getElementById('list-vendas').innerHTML = vendas.map(v => `
-          <div class="p-3 rounded-xl bg-black/30 border border-white/5 flex justify-between items-center text-sm">
-            <div>
-              <p class="font-bold text-white">${v.produto}</p>
-              <p class="text-xs text-neutral-400">Qtd: ${v.quantidade} | Pgto: ${v.forma_pgto}</p>
-            </div>
-            <span class="font-bold text-gold">R$ ${v.valor_total.toFixed(2)}</span>
-          </div>
-        `).join('');
-
-        // Render Comissões
-        document.getElementById('list-comissoes').innerHTML = comissoes.map(c => `
-          <div class="p-3 rounded-xl bg-black/30 border border-white/5 flex justify-between items-center text-sm">
-            <div>
-              <p class="font-bold text-white">${c.barbeiro}</p>
-              <p class="text-xs text-neutral-400">${c.servico} (${c.data})</p>
-            </div>
-            <span class="font-bold text-green-400">R$ ${c.comissao.toFixed(2)}</span>
-          </div>
-        `).join('');
+        renderDashboard();
+        renderAgendamentos();
+        renderBarbeiros();
+        renderClientes();
+        renderServicos();
+        renderProdutos();
+        renderPOS();
+        renderFinanceiro();
+        populateModalSelects();
 
       } catch (err) {
-        console.error('Erro ao carregar dados:', err);
+        console.error('Erro ao carregar dados do banco:', err);
       }
     }
+
+    // 1. DASHBOARD
+    function renderDashboard() {
+      document.getElementById('dash-stat-agendamentos').textContent = globalState.agendamentos.length;
+      
+      const totalVendas = globalState.vendas.reduce((acc, v) => acc + (v.valor_total || 0), 0);
+      const totalAppts = globalState.agendamentos.filter(a => a.status === 'Concluído').reduce((acc, a) => acc + (a.valor || 0), 0);
+      document.getElementById('dash-stat-faturamento').textContent = `R$ ${(totalVendas + totalAppts).toFixed(2)}`;
+      
+      document.getElementById('dash-stat-clientes').textContent = globalState.clientes.length;
+      
+      const totalEstoque = globalState.produtos.reduce((acc, p) => acc + (p.estoque || 0), 0);
+      document.getElementById('dash-stat-estoque').textContent = totalEstoque;
+
+      document.getElementById('table-dash-agendamentos').innerHTML = globalState.agendamentos.slice(0, 5).map(a => `
+        <tr class="hover:bg-white/5 transition">
+          <td class="p-4 font-bold text-white">${a.cliente}</td>
+          <td class="p-4">${a.barbeiro}</td>
+          <td class="p-4">${a.servico}</td>
+          <td class="p-4 text-xs font-mono">${a.data} ${a.hora}</td>
+          <td class="p-4 font-bold text-gold">R$ ${(a.valor || 0).toFixed(2)}</td>
+          <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${a.status === 'Concluído' ? 'bg-green-900/40 text-green-300 border border-green-500/30' : 'bg-gold/10 text-gold border border-gold/30'}">${a.status}</span></td>
+          <td class="p-4">
+            ${a.status !== 'Concluído' ? `<button onclick="updateApptStatus(${a.id}, 'Concluído')" class="px-2.5 py-1 rounded-lg bg-green-600 hover:bg-green-500 text-white font-bold text-xs">Concluir</button>` : `<span class="text-xs text-neutral-500">Ok</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // 2. AGENDA FULL
+    function renderAgendamentos() {
+      document.getElementById('table-full-agendamentos').innerHTML = globalState.agendamentos.map(a => `
+        <tr class="hover:bg-white/5 transition">
+          <td class="p-4 font-mono text-xs text-neutral-400">#${a.id}</td>
+          <td class="p-4 font-bold text-white">${a.cliente}</td>
+          <td class="p-4">${a.barbeiro}</td>
+          <td class="p-4">${a.servico}</td>
+          <td class="p-4 text-xs font-mono">${a.data} ${a.hora}</td>
+          <td class="p-4 font-bold text-gold">R$ ${(a.valor || 0).toFixed(2)}</td>
+          <td class="p-4"><span class="px-2.5 py-1 rounded-full text-xs font-bold ${a.status === 'Concluído' ? 'bg-green-900/40 text-green-300 border border-green-500/30' : 'bg-gold/10 text-gold border border-gold/30'}">${a.status}</span></td>
+          <td class="p-4 space-x-2">
+            ${a.status !== 'Concluído' ? `
+              <button onclick="updateApptStatus(${a.id}, 'Concluído')" class="px-3 py-1 rounded-lg bg-green-600 hover:bg-green-500 text-white font-bold text-xs">Concluir</button>
+              <button onclick="updateApptStatus(${a.id}, 'Cancelado')" class="px-3 py-1 rounded-lg bg-red-900/50 hover:bg-red-800 text-red-200 font-bold text-xs">Cancelar</button>
+            ` : `<span class="text-xs text-green-400 font-bold">✓ Finalizado</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updateApptStatus(id, status) {
+      await fetch(`/api/agendamentos/${id}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      loadAllData();
+    }
+
+    // 3. BARBEIROS
+    function renderBarbeiros() {
+      document.getElementById('grid-barbeiros-admin').innerHTML = globalState.barbeiros.map(b => `
+        <div class="p-6 rounded-2xl bg-darkCard border border-white/10 text-center relative overflow-hidden">
+          <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-2xl font-bold">💈</div>
+          <h3 class="font-bold text-white">${b.nome}</h3>
+          <p class="text-xs text-gold mt-1">${b.cargo}</p>
+          <p class="text-xs text-neutral-400 mt-2"><i class="fa-solid fa-phone mr-1"></i> ${b.telefone}</p>
+          <p class="text-xs text-neutral-500 mt-1 font-mono">PIX: ${b.chave_pix || 'Não cadastrada'}</p>
+        </div>
+      `).join('');
+    }
+
+    // 4. CLIENTES & CRM WHATSAPP
+    function renderClientes() {
+      document.getElementById('grid-clientes-admin').innerHTML = globalState.clientes.map(c => {
+        const cleanPhone = (c.telefone || '').replace(/\D/g, '');
+        const waMsg = encodeURIComponent(`Olá ${c.nome}! Tudo bem? Passando para lembrar da sua visita na Barbearia Studio.`);
+        const waLink = `https://wa.me/55${cleanPhone}?text=${waMsg}`;
+
+        return `
+          <div class="p-5 rounded-2xl bg-darkCard border border-white/10 flex justify-between items-center">
+            <div>
+              <p class="font-bold text-white text-base">${c.nome}</p>
+              <p class="text-xs text-neutral-400"><i class="fa-solid fa-phone mr-1"></i> ${c.telefone}</p>
+              <p class="text-xs text-gold mt-2 font-semibold"><i class="fa-solid fa-calendar-day mr-1"></i> Próximo Retorno: ${c.retorno || '2026-08-30'}</p>
+            </div>
+            <div class="text-right space-y-2">
+              <span class="inline-block px-3 py-1 rounded-full bg-gold/10 text-gold font-extrabold text-xs border border-gold/30">${c.cartoes} Cartões</span>
+              <div>
+                <a href="${waLink}" target="_blank" class="px-3 py-1.5 rounded-xl bg-green-600 hover:bg-green-500 text-white font-bold text-xs inline-flex items-center gap-1.5 transition">
+                  <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 5. SERVIÇOS
+    function renderServicos() {
+      document.getElementById('grid-servicos-admin').innerHTML = globalState.servicos.map(s => `
+        <div class="p-6 rounded-2xl bg-darkCard border border-white/10 flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gold/10 text-gold border border-gold/30">${s.categoria}</span>
+              <span class="text-xs text-neutral-400"><i class="fa-regular fa-clock"></i> ${s.tempo}</span>
+            </div>
+            <h3 class="font-bold text-white mt-4 text-lg">${s.nome}</h3>
+          </div>
+          <div class="mt-6 border-t border-white/10 pt-4 flex justify-between items-end">
+            <div>
+              <p class="text-[10px] text-neutral-400 uppercase">Preço Final</p>
+              <p class="text-gold font-extrabold text-xl">R$ ${(s.valor || 0).toFixed(2)}</p>
+            </div>
+            <div class="text-right">
+              <p class="text-[10px] text-neutral-400 uppercase">Comissão Barbeiro</p>
+              <p class="text-green-400 font-bold text-sm">R$ ${(s.comissao || 0).toFixed(2)}</p>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 6. PRODUTOS & ESTOQUE
+    function renderProdutos() {
+      document.getElementById('grid-produtos-admin').innerHTML = globalState.produtos.map(p => `
+        <div class="p-5 rounded-2xl bg-darkCard border border-white/10 flex justify-between items-center">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-white text-base">${p.nome}</span>
+              ${p.estoque <= 10 ? `<span class="px-2 py-0.5 rounded bg-red-950 text-red-300 border border-red-500/30 text-[10px] font-bold">Estoque Baixo</span>` : ''}
+            </div>
+            <p class="text-xs text-neutral-400 mt-1">Categoria: ${p.categoria}</p>
+            <p class="text-xs text-neutral-500 mt-1">Custo: R$ ${(p.valor_compra || 0).toFixed(2)} | Venda: <strong class="text-gold">R$ ${(p.valor_venda || 0).toFixed(2)}</strong></p>
+          </div>
+          <div class="text-right">
+            <span class="px-3 py-1.5 rounded-xl ${p.estoque <= 10 ? 'bg-red-900/30 text-red-300 border border-red-500/30' : 'bg-black/50 text-white border border-white/15'} font-extrabold text-sm">
+              ${p.estoque} un
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 7. POS
+    function renderPOS() {
+      document.getElementById('pos-products-grid').innerHTML = globalState.produtos.map(p => `
+        <div onclick="selectPosProduct(${p.id}, '${p.nome}', ${p.valor_venda})" class="p-4 rounded-2xl bg-black/40 border border-white/10 hover:border-gold cursor-pointer transition">
+          <p class="font-bold text-white text-sm">${p.nome}</p>
+          <p class="text-xs text-neutral-400">${p.categoria}</p>
+          <div class="mt-3 flex justify-between items-center">
+            <span class="text-gold font-extrabold text-base">R$ ${p.valor_venda.toFixed(2)}</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-white/10 text-neutral-300">${p.estoque} un</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectPosProduct(id, nome, valor) {
+      document.getElementById('pos-product-id').value = id;
+      document.getElementById('pos-item-name').value = nome;
+      document.getElementById('pos-unit-price').value = `R$ ${valor.toFixed(2)}`;
+      updatePosTotal();
+    }
+
+    function updatePosTotal() {
+      const priceStr = document.getElementById('pos-unit-price').value.replace('R$ ', '');
+      const unitPrice = parseFloat(priceStr) || 0;
+      const qty = parseInt(document.getElementById('pos-qty').value) || 1;
+      const total = unitPrice * qty;
+      document.getElementById('pos-total-display').textContent = `R$ ${total.toFixed(2)}`;
+    }
+
+    async function executePosCheckout() {
+      const item = document.getElementById('pos-item-name').value;
+      if (!item) return alert('Selecione um produto primeiro!');
+
+      const product_id = document.getElementById('pos-product-id').value;
+      const quantidade = parseInt(document.getElementById('pos-qty').value) || 1;
+      const priceStr = document.getElementById('pos-unit-price').value.replace('R$ ', '');
+      const valor_total = parseFloat(priceStr) * quantidade;
+      const forma_pgto = document.getElementById('pos-payment').value;
+
+      await fetch('/api/pos/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item, product_id, quantidade, valor_total, forma_pgto })
+      });
+
+      alert('✅ Venda realizada e estoque atualizado com sucesso!');
+      document.getElementById('pos-item-name').value = '';
+      document.getElementById('pos-product-id').value = '';
+      document.getElementById('pos-total-display').textContent = 'R$ 0,00';
+      loadAllData();
+    }
+
+    // 8. FINANCEIRO
+    function renderFinanceiro() {
+      document.getElementById('list-vendas').innerHTML = globalState.vendas.map(v => `
+        <div class="p-3.5 rounded-xl bg-black/40 border border-white/5 flex justify-between items-center text-sm">
+          <div>
+            <p class="font-bold text-white">${v.item}</p>
+            <p class="text-xs text-neutral-400">Data: ${v.data} | Pgto: ${v.forma_pgto}</p>
+          </div>
+          <span class="font-extrabold text-gold">R$ ${(v.valor_total || 0).toFixed(2)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('list-comissoes').innerHTML = globalState.comissoes.map(c => `
+        <div class="p-3.5 rounded-xl bg-black/40 border border-white/5 flex justify-between items-center text-sm">
+          <div>
+            <p class="font-bold text-white">${c.barbeiro}</p>
+            <p class="text-xs text-neutral-400">${c.servico} (${c.data})</p>
+          </div>
+          <div class="text-right">
+            <p class="font-extrabold text-green-400">R$ ${(c.comissao || 0).toFixed(2)}</p>
+            ${c.pago !== 'Sim' ? `<button onclick="payCommission(${c.id})" class="mt-1 px-2.5 py-0.5 rounded bg-green-600 text-white font-bold text-[10px]">Dar Baixa</button>` : `<span class="text-[10px] text-neutral-500 font-bold">✓ Pago</span>`}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function payCommission(id) {
+      await fetch(`/api/comissoes/${id}/pagar`, { method: 'PATCH' });
+      loadAllData();
+    }
+
+    function populateModalSelects() {
+      const selectSrv = document.getElementById('m-appt-servico');
+      const selectBarber = document.getElementById('m-appt-barbeiro');
+
+      if (selectSrv) selectSrv.innerHTML = globalState.servicos.map(s => `<option value="${s.nome}">${s.nome} - R$ ${s.valor.toFixed(2)}</option>`).join('');
+      if (selectBarber) selectBarber.innerHTML = globalState.barbeiros.map(b => `<option value="${b.nome}">${b.nome}</option>`).join('');
+      document.getElementById('m-appt-data').value = new Date().toISOString().split('T')[0];
+    }
+
+    // FORM MODAL SUBMITS
+    document.getElementById('form-modal-agendamento').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        cliente: document.getElementById('m-appt-cliente').value,
+        cliente_telefone: document.getElementById('m-appt-telefone').value,
+        servico: document.getElementById('m-appt-servico').value,
+        barbeiro: document.getElementById('m-appt-barbeiro').value,
+        data: document.getElementById('m-appt-data').value,
+        hora: document.getElementById('m-appt-hora').value
+      };
+      await fetch('/api/agendamentos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      closeModal('modal-agendamento');
+      loadAllData();
+    });
+
+    document.getElementById('form-modal-barbeiro').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        nome: document.getElementById('m-barber-nome').value,
+        cargo: document.getElementById('m-barber-cargo').value,
+        telefone: document.getElementById('m-barber-telefone').value,
+        chave_pix: document.getElementById('m-barber-pix').value
+      };
+      await fetch('/api/barbeiros', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      closeModal('modal-barbeiro');
+      loadAllData();
+    });
+
+    document.getElementById('form-modal-cliente').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        nome: document.getElementById('m-client-nome').value,
+        telefone: document.getElementById('m-client-telefone').value
+      };
+      await fetch('/api/clientes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      closeModal('modal-cliente');
+      loadAllData();
+    });
+
+    document.getElementById('form-modal-servico').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        nome: document.getElementById('m-srv-nome').value,
+        categoria: document.getElementById('m-srv-cat').value,
+        tempo: document.getElementById('m-srv-tempo').value,
+        valor: document.getElementById('m-srv-valor').value,
+        comissao: document.getElementById('m-srv-comissao').value
+      };
+      await fetch('/api/servicos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      closeModal('modal-servico');
+      loadAllData();
+    });
+
+    document.getElementById('form-modal-produto').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        nome: document.getElementById('m-prod-nome').value,
+        categoria: document.getElementById('m-prod-cat').value,
+        estoque: document.getElementById('m-prod-estoque').value,
+        valor_compra: document.getElementById('m-prod-compra').value,
+        valor_venda: document.getElementById('m-prod-venda').value
+      };
+      await fetch('/api/produtos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      closeModal('modal-produto');
+      loadAllData();
+    });
   </script>
 </body>
 </html>
