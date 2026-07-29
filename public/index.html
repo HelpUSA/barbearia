@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barbearia Studio - Estilo & Tradição</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: '#EAB308',
+            darkBg: '#0f0f0f',
+            darkCard: '#18181b'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-darkBg text-neutral-100 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="border-b border-white/10 bg-neutral-950/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center border border-gold/40 text-gold font-bold text-xl">
+          ✂️
+        </div>
+        <span class="text-xl font-bold tracking-tight">Barbearia Studio</span>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-neutral-300">
+        <a href="#inicio" class="hover:text-gold transition">Início</a>
+        <a href="#servicos" class="hover:text-gold transition">Serviços</a>
+        <a href="#barbeiros" class="hover:text-gold transition">Barbeiros</a>
+        <a href="#agendar" class="hover:text-gold transition">Agendamento</a>
+        <a href="/sistema" class="px-4 py-2 rounded-xl bg-gold text-black font-bold hover:opacity-90 transition">Painel Admin (/sistema)</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="inicio" class="relative py-20 px-4 overflow-hidden border-b border-white/5 bg-gradient-to-b from-neutral-900 to-darkBg">
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <span class="inline-block px-4 py-1.5 rounded-full border border-gold/40 bg-gold/10 text-gold text-xs font-semibold uppercase tracking-wider mb-6">
+        Estilo, Tradição & Atendimento Exclusivo
+      </span>
+      <h1 class="text-4xl sm:text-6xl font-black text-white leading-tight tracking-tight mb-6">
+        O Melhor Corte & Barba para o seu Estilo
+      </h1>
+      <p class="text-neutral-400 text-lg sm:text-xl max-w-2xl mx-auto mb-8">
+        Venha vivenciar uma experiência completa na Barbearia Studio. Agende seu horário online com rapidez e praticidade.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#agendar" class="px-8 py-4 rounded-xl bg-gold text-black font-extrabold text-base hover:opacity-90 transition shadow-lg shadow-gold/20">
+          <i class="fa-solid fa-calendar-check mr-2"></i> Agendar Agora
+        </a>
+        <a href="/sistema" class="px-8 py-4 rounded-xl border border-white/20 bg-black/40 text-white font-bold hover:border-gold hover:text-gold transition">
+          <i class="fa-solid fa-lock mr-2"></i> Acesso Restrito (/sistema)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Serviços -->
+  <section id="servicos" class="py-16 px-4 max-w-6xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white mb-2">Nossos Serviços</h2>
+      <p class="text-neutral-400">Confira nossa tabela completa de serviços e tratamentos</p>
+    </div>
+
+    <div id="servicos-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Injetado por JS -->
+      <div class="p-6 rounded-2xl bg-darkCard border border-white/10 animate-pulse text-center">
+        Carregando serviços...
+      </div>
+    </div>
+  </section>
+
+  <!-- Barbeiros -->
+  <section id="barbeiros" class="py-16 px-4 bg-neutral-900/50 border-t border-b border-white/5">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-white mb-2">Equipe de Barbeiros</h2>
+        <p class="text-neutral-400">Profissionais qualificados para entregar o melhor resultado</p>
+      </div>
+
+      <div id="barbeiros-grid" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Injetado por JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Agendamento Online -->
+  <section id="agendar" class="py-16 px-4 max-w-3xl mx-auto">
+    <div class="bg-darkCard p-8 rounded-3xl border border-white/10 shadow-2xl">
+      <div class="text-center mb-8">
+        <span class="text-gold font-bold text-sm uppercase tracking-wider">Agendamento Online</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Marque seu Horário</h2>
+      </div>
+
+      <form id="form-agendar" class="space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-neutral-300 mb-2">Seu Nome Completo</label>
+          <input type="text" id="cliente-nome" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" placeholder="Ex: João da Silva" required>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-neutral-300 mb-2">Selecione o Serviço</label>
+            <select id="select-servico" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" required>
+              <option value="">Carregando serviços...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-300 mb-2">Selecione o Barbeiro</label>
+            <select id="select-barbeiro" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" required>
+              <option value="">Carregando barbeiros...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-neutral-300 mb-2">Data</label>
+            <input type="date" id="data-agendamento" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" required>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-neutral-300 mb-2">Horário</label>
+            <input type="time" id="hora-agendamento" class="w-full bg-black/40 border border-white/15 rounded-xl px-4 py-3 text-white outline-none focus:border-gold" value="14:00" required>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full bg-gold text-black font-extrabold py-4 rounded-xl hover:opacity-90 transition text-base shadow-lg shadow-gold/20">
+          <i class="fa-solid fa-check-circle mr-2"></i> Confirmar Agendamento
+        </button>
+      </form>
+
+      <div id="msg-sucesso" class="hidden mt-4 p-4 rounded-xl bg-green-900/40 border border-green-500/30 text-green-200 text-center text-sm">
+        ✅ Agendamento realizado com sucesso!
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-white/10 bg-neutral-950 py-8 text-center text-sm text-neutral-500">
+    <div class="max-w-6xl mx-auto px-4">
+      <p>© 2026 Barbearia Studio - Todos os direitos reservados.</p>
+      <p class="mt-2"><a href="/sistema" class="text-neutral-400 hover:text-gold">Acessar Painel Administrador (/sistema)</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // Carregar dados das APIs
+    async function loadData() {
+      try {
+        const [servicosRes, barbeirosRes] = await Promise.all([
+          fetch('/api/servicos').then(r => r.json()),
+          fetch('/api/barbeiros').then(r => r.json())
+        ]);
+
+        // Render Servicos
+        const servicosGrid = document.getElementById('servicos-grid');
+        const selectServico = document.getElementById('select-servico');
+        
+        servicosGrid.innerHTML = servicosRes.map(s => `
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10 hover:border-gold/50 transition">
+            <div class="flex justify-between items-start mb-4">
+              <span class="text-xs font-semibold px-3 py-1 rounded-full bg-gold/10 text-gold border border-gold/30">${s.categoria}</span>
+              <span class="text-xl font-extrabold text-gold">R$ ${s.valor.toFixed(2)}</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">${s.nome}</h3>
+            <p class="text-sm text-neutral-400 mb-4"><i class="fa-regular fa-clock mr-1"></i> Duração estimada: ${s.tempo}</p>
+            <a href="#agendar" class="block text-center w-full py-2.5 rounded-xl border border-white/20 bg-black/30 text-white font-semibold hover:border-gold hover:text-gold transition text-sm">
+              Agendar este Serviço
+            </a>
+          </div>
+        `).join('');
+
+        selectServico.innerHTML = servicosRes.map(s => `<option value="${s.nome}">${s.nome} - R$ ${s.valor.toFixed(2)}</option>`).join('');
+
+        // Render Barbeiros
+        const barbeirosGrid = document.getElementById('barbeiros-grid');
+        const selectBarbeiro = document.getElementById('select-barbeiro');
+
+        barbeirosGrid.innerHTML = barbeirosRes.map(b => `
+          <div class="p-6 rounded-2xl bg-darkCard border border-white/10 text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-2xl font-bold">
+              💈
+            </div>
+            <h3 class="text-base font-bold text-white">${b.nome}</h3>
+            <p class="text-xs text-gold mt-1">${b.cargo}</p>
+            <p class="text-xs text-neutral-400 mt-2">${b.telefone}</p>
+          </div>
+        `).join('');
+
+        selectBarbeiro.innerHTML = barbeirosRes.map(b => `<option value="${b.nome}">${b.nome}</option>`).join('');
+
+      } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+      }
+    }
+
+    // Set Data Padrão
+    document.getElementById('data-agendamento').value = new Date().toISOString().split('T')[0];
+
+    // Submit Agendamento
+    document.getElementById('form-agendar').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        cliente: document.getElementById('cliente-nome').value,
+        servico: document.getElementById('select-servico').value,
+        barbeiro: document.getElementById('select-barbeiro').value,
+        data: document.getElementById('data-agendamento').value,
+        hora: document.getElementById('hora-agendamento').value
+      };
+
+      try {
+        const res = await fetch('/api/agendamentos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (res.ok) {
+          document.getElementById('msg-sucesso').classList.remove('hidden');
+          document.getElementById('cliente-nome').value = '';
+          setTimeout(() => document.getElementById('msg-sucesso').classList.add('hidden'), 5000);
+        }
+      } catch (err) {
+        alert('Erro ao enviar agendamento.');
+      }
+    });
+
+    loadData();
+  </script>
+</body>
+</html>
